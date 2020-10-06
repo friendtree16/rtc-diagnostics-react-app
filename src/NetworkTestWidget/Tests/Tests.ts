@@ -1,4 +1,4 @@
-import { testBitrate, BitrateTest } from '@twilio/rtc-diagnostics';
+import { testMediaConnectionBitrate, MediaConnectionBitrateTest } from '@twilio/rtc-diagnostics';
 import { Device, Connection, PreflightTest } from 'twilio-client';
 import { getLogger } from 'loglevel';
 import { name as appName } from '../../../package.json';
@@ -66,28 +66,28 @@ export function preflightTestRunner(
   });
 }
 
-export function bitrateTestRunner(edge: Edge, iceServers: BitrateTest.Options['iceServers']) {
+export function bitrateTestRunner(edge: Edge, iceServers: MediaConnectionBitrateTest.Options['iceServers']) {
   const updatedIceServers = regionalizeIceUrls(edge, iceServers);
 
-  return new Promise<BitrateTest.Report>((resolve, reject) => {
-    const bitrateTest = testBitrate({ iceServers: updatedIceServers });
+  return new Promise<MediaConnectionBitrateTest.Report>((resolve, reject) => {
+    const mediaConnectionBitrateTest = testMediaConnectionBitrate({ iceServers: updatedIceServers });
 
-    bitrateTest.on(BitrateTest.Events.Bitrate, (bitrate) => {
+    mediaConnectionBitrateTest.on(MediaConnectionBitrateTest.Events.Bitrate, (bitrate) => {
       log.debug('Bitrate Test - bitrate: ', bitrate);
     });
 
-    bitrateTest.on(BitrateTest.Events.Error, (error) => {
+    mediaConnectionBitrateTest.on(MediaConnectionBitrateTest.Events.Error, (error) => {
       log.debug('Bitrate Test - error: ', error);
       reject(error);
     });
 
-    bitrateTest.on(BitrateTest.Events.End, (report) => {
+    mediaConnectionBitrateTest.on(MediaConnectionBitrateTest.Events.End, (report) => {
       log.debug('Bitrate Test - end: ', report);
       resolve(report);
     });
 
     setTimeout(() => {
-      bitrateTest.stop();
+      mediaConnectionBitrateTest.stop();
     }, BITRATE_TEST_DURATION);
   });
 }

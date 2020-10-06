@@ -1,4 +1,4 @@
-import { BitrateTest } from '@twilio/rtc-diagnostics';
+import { MediaConnectionBitrateTest } from '@twilio/rtc-diagnostics';
 import { Device, PreflightTest } from 'twilio-client';
 import { DiagnosticError } from '@twilio/rtc-diagnostics/es5/lib/errors';
 import RTCSample from 'twilio-client/es5/twilio/rtc/sample';
@@ -23,7 +23,7 @@ declare module 'twilio-client' {
 export interface TestResults {
   edge: Edge;
   results: {
-    bitrate?: BitrateTest.Report;
+    bitrate?: MediaConnectionBitrateTest.Report;
     preflight?: PreflightTest.Report;
   };
   errors: {
